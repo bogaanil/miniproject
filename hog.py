@@ -49,7 +49,7 @@ cwd = os.getcwd()
 cell = [8, 8]
 incr = [8,8]
 bin_num = 8
-im_size = [32,32]
+im_size = [64,128]
 
 
 #image path must be wrt current working directory
@@ -73,8 +73,8 @@ def create_grad_array(image_array):
 
 	# local contrast normalisation
 	image_array = (image_array-np.mean(image_array))/np.std(image_array)
-	max_h = 32
-	max_w = 32
+	max_h = 128
+	max_w = 64
 
 	grad = np.zeros([max_h, max_w])
 	mag = np.zeros([max_h, max_w])
@@ -186,7 +186,31 @@ def create_hog_file(image_path,save_path):
 	write_hog_file(save_path,final_array)
 
 if __name__ == '__main__':
-	create_hog_file('logo.jpg','logo.txt')
-	mg = read_hog_file('logo.txt')
-	print(mg)
-	print(mg.shape)
+	# create_hog_file('logo.jpg','logo.txt')
+	# mg = read_hog_file('logo.txt')
+	# print(mg)
+	# print(mg.shape)
+
+	class_list=[]
+
+	train_path = os.path.join(cwd,'new_train_data')
+	hog_file_path = os.path.join(cwd,'hog_files')
+	if not os.path.exists(hog_file_path):
+		os.makedirs(hog_file_path)
+
+	class_list.extend(os.listdir(train_path))
+
+	for folder,val in enumerate(class_list):
+		class_path = os.path.join(train_path,val)
+		hog_path = os.path.join(hog_file_path,val)
+
+		if not os.path.exists(hog_path):
+			os.makedirs(hog_path)
+
+		image_list = os.listdir(class_path)
+		index=0
+		for i in image_list:
+			print index
+			img_path = os.path.join(class_path,i)
+			create_hog_file(img_path, hog_path+"/"+str(index)+".txt")
+			index=index+1
