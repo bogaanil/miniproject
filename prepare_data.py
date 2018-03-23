@@ -24,7 +24,7 @@ import os,sys
 from PIL import Image
 
 cwd = os.getcwd()
-train_path = os.path.join(cwd,'raw_train_data')
+train_path = "~/INRIAPerson/train_64x128_H96/pos"
 dest_path = os.path.join(cwd,'new_train_data')
 new_dim = [64,128]
 
