@@ -10,10 +10,10 @@ neg_features=np.zeros([1218,3360])
 pos_features=np.zeros([1218,3360])
 
 for i in range(1218):
-	neg_features[i,:]=np.loadtxt(os.path.join(class_list[0],str(i)+'.txt'))
+	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[0],str(i)+'.txt'))
 
 for i in range(1218):
-	pos_features[i,:]=np.loadtxt(os.path.join(class_list[1],str(i)+'.txt'))
+	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[1],str(i)+'.txt'))
 
 features_train = np.zeros([2000, 3360])
 labels_train = np.zeros(2000, dtype='uint8')
@@ -29,8 +29,8 @@ for i in range(1000):
 for i in range(218):
 	features_test[2*i,:] = neg_features[2000+i,:]
 	features_test[2*i+1,:] = pos_features[2000+i,:]
-	labels_train[2*i]=0
-	labels_train[2*i+1]=1
+	labels_test[2*i]=0
+	labels_test[2*i+1]=1
 
 D=3360
 K=2
@@ -98,3 +98,10 @@ for i in xrange(int(epoch)):
 		W2 += -step_size * dW2
 		b2 += -step_size * db2
 	print "iteration %d: loss %f" % (i, loss)
+
+X = features_test
+y= labels_test
+hidden_layer = np.maximum(0, np.dot(X, W) + b)
+scores = np.dot(hidden_layer, W2) + b2
+predicted_class = np.argmax(scores, axis=1)
+print 'training accuracy: %.2f' % (np.mean(predicted_class == y))
