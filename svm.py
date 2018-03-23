@@ -46,16 +46,17 @@ num_examples = 1000*2
 for i in xrange(10):
 
 	for batch in range(20):
-
+		X = features_train[batch*10:(batch+1)*10,:]
+		y = labels_train[batch*10:(batch+1)*10]
 		# evaluate class scores, [N x K]
-		scores = np.dot(features_train[batch*10:(batch+1)*10,:], W) + b 
+		scores = np.dot(X, W) + b 
 
 		# compute the class probabilities
 		exp_scores = np.exp(scores)
 		probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True) # [N x K]
 
 		# compute the loss: average cross-entropy loss and regularization
-		corect_logprobs = -np.log(probs[range(num_examples),labels_train])
+		corect_logprobs = -np.log(probs[range(num_examples),y])
 		data_loss = np.sum(corect_logprobs)/num_examples
 		reg_loss = 0.5*reg*np.sum(W*W)
 		loss = data_loss + reg_loss
@@ -64,7 +65,7 @@ for i in xrange(10):
 
 		# compute the gradient on scores
 		dscores = probs
-		dscores[range(num_examples),labels_train] -= 1
+		dscores[range(num_examples),y] -= 1
 		dscores /= num_examples
 
 		# backpropate the gradient to the parameters (W,b)
