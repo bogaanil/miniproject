@@ -29,8 +29,8 @@ for i in range(1000):
 for i in range(218):
 	features_test[2*i,:] = neg_features[1000+i,:]
 	features_test[2*i+1,:] = pos_features[1000+i,:]
-	labels_train[2*i]=0
-	labels_train[2*i+1]=1
+	labels_test[2*i]=0
+	labels_test[2*i+1]=1
 
 D=3360
 K=2
@@ -38,7 +38,7 @@ W = 0.01 * np.random.randn(D,K)
 b = np.zeros((1,K))
 
 # some hyperparameters
-step_size = 1e-0
+step_size = 1
 reg = 1e-3 # regularization strength
 
 print "give no of epochs"
