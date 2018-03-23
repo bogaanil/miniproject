@@ -9,11 +9,22 @@ class_list=os.listdir(hog_files)
 neg_features=np.zeros([1218,3360])
 pos_features=np.zeros([1218,3360])
 
-for i in range(1218):
-	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[0],str(i)+'.txt'))
+#for i in range(1218):
+#	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[1],str(i)+'.txt'))
+#	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[0],str(i)+'.txt'))
 
 for i in range(1218):
-	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[1],str(i)+'.txt'))
+	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+class_list[0],str(i)+'.txt'))
+
+for i in range(1218):
+	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+class_list[1],str(i)+'.txt'))
+
+
+
+#for i in range(1218):
+#	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[0],str(i)+'.txt'))
+
+
 
 features_train = np.zeros([2000, 3360])
 labels_train = np.zeros(2000, dtype='uint8')
@@ -27,28 +38,28 @@ for i in range(1000):
 	labels_train[2*i+1]=1
 
 for i in range(218):
-	features_test[2*i,:] = neg_features[2000+i,:]
-	features_test[2*i+1,:] = pos_features[2000+i,:]
+	features_test[2*i,:] = neg_features[1000+i,:]
+	features_test[2*i+1,:] = pos_features[1000+i,:]
 	labels_test[2*i]=0
 	labels_test[2*i+1]=1
 
 D=3360
 K=2
-h = 500 # size of hidden layer
+h = 100 # size of hidden layer
 W = 0.01 * np.random.randn(D,h)
 b = np.zeros((1,h))
 W2 = 0.01 * np.random.randn(h,K)
 b2 = np.zeros((1,K))
 
 # some hyperparameters
-step_size = 1e-0
+step_size = 0.15
 reg = 1e-3 # regularization strength
 
 print "give no of epochs"
 epoch= raw_input()
 # gradient descent loop
 num_examples = features_train.shape[0]
-for i in xrange(int(epoch)):
+for i in range(int(epoch)):
 	loss=0
 	for batch in range(20):
 		X = features_train[batch*10:(batch+1)*10,:]
