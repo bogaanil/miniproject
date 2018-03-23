@@ -44,14 +44,18 @@ b2 = np.zeros((1,K))
 step_size = 1e-0
 reg = 1e-3 # regularization strength
 
+print "give no of epochs"
+epoch= raw_input()
 # gradient descent loop
 num_examples = features_train.shape[0]
-for i in xrange(10):
+for i in xrange(int(epoch)):
 	loss=0
 	for batch in range(20):
 		X = features_train[batch*10:(batch+1)*10,:]
 		y = labels_train[batch*10:(batch+1)*10]
 		# evaluate class scores, [N x K]
+		num_examples = X.shape[0]
+		
 		hidden_layer = np.maximum(0, np.dot(X, W) + b) # note, ReLU activation
 		scores = np.dot(hidden_layer, W2) + b2
 
