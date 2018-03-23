@@ -10,10 +10,10 @@ neg_features=np.zeros([1218,3360])
 pos_features=np.zeros([1218,3360])
 
 for i in range(1218):
-	neg_features[i,:]=np.loadtxt(os.path.join(class_list[0],str(i)+'.txt'))
+	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+class_list[0],str(i)+'.txt'))
 
 for i in range(1218):
-	pos_features[i,:]=np.loadtxt(os.path.join(class_list[1],str(i)+'.txt'))
+	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+class_list[1],str(i)+'.txt'))
 
 features_train = np.zeros([2000, 3360])
 labels_train = np.zeros(2000, dtype='uint8')
@@ -27,8 +27,8 @@ for i in range(1000):
 	labels_train[2*i+1]=1
 
 for i in range(218):
-	features_test[2*i,:] = neg_features[2000+i,:]
-	features_test[2*i+1,:] = pos_features[2000+i,:]
+	features_test[2*i,:] = neg_features[1000+i,:]
+	features_test[2*i+1,:] = pos_features[1000+i,:]
 	labels_train[2*i]=0
 	labels_train[2*i+1]=1
 
@@ -47,6 +47,7 @@ for i in xrange(10):
 	loss = 0
 	for batch in range(20):
 		X = features_train[batch*10:(batch+1)*10,:]
+		num_examples= X.shape[0]
 		y = labels_train[batch*10:(batch+1)*10]
 		# evaluate class scores, [N x K]
 		scores = np.dot(X, W) + b 
