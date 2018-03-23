@@ -41,9 +41,11 @@ b = np.zeros((1,K))
 step_size = 1e-0
 reg = 1e-3 # regularization strength
 
+print "give no of epochs"
+epoch= raw_input()
 # gradient descent loop
 num_examples = 1000*2
-for i in xrange(10):
+for i in xrange(int(epoch)):
 	loss = 0
 	for batch in range(20):
 		X = features_train[batch*10:(batch+1)*10,:]
