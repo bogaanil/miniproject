@@ -10,10 +10,11 @@ neg_features=np.zeros([1218,3360])
 pos_features=np.zeros([1218,3360])
 
 for i in range(1218):
-	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[0],str(i)+'.txt'))
+	neg_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+class_list[0],str(i)+'.txt'))
 
 for i in range(1218):
-	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+os.path.join(class_list[1],str(i)+'.txt'))
+	pos_features[i,:]=np.loadtxt(os.path.join(hog_files+"/"+class_list[1],str(i)+'.txt'))
+
 
 features_train = np.zeros([2000, 3360])
 labels_train = np.zeros(2000, dtype='uint8')
@@ -48,7 +49,7 @@ print "give no of epochs"
 epoch= raw_input()
 # gradient descent loop
 num_examples = features_train.shape[0]
-for i in xrange(int(epoch)):
+for i in range(int(epoch)):
 	loss=0
 	for batch in range(20):
 		X = features_train[batch*10:(batch+1)*10,:]
