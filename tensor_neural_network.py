@@ -28,15 +28,22 @@ for i in range(1000):
 	labels_train[2*i]=0
 	labels_train[2*i+1]=1
 
+labels_train_hot=np.zeros([2000,2],dtype=np.int8)
+for i in range(2000):
+	labels_train_hot[i,labels_train[i]]=1
+
 for i in range(218):
-	features_test[2*i,:] = neg_features[2000+i,:]
-	features_test[2*i+1,:] = pos_features[2000+i,:]
+	features_test[2*i,:] = neg_features[1000+i,:]
+	features_test[2*i+1,:] = pos_features[1000+i,:]
 	labels_test[2*i]=0
 	labels_test[2*i+1]=1
 
+labels_test_hot=np.zeros([2*218,2],dtype=np.int8)
+for i in range(2*218):
+	labels_test_hot[i,labels_test[i]]=1
 
-n_nodes_hl1 = 500
-n_nodes_hl2 = 10
+n_nodes_hl1 = 5
+n_nodes_hl2 = 2
 # n_nodes_hl3=100
 n_classes = 2
 batch_size = 100
@@ -51,7 +58,7 @@ hidden_2_layer = {'weights':tf.Variable(tf.random_normal([n_nodes_hl1, n_nodes_h
 
 # hidden_3_layer = {'weights':tf.Variable(tf.random_normal([n_nodes_hl2, n_nodes_hl3])),
 # 'biases':tf.Variable(tf.random_normal([n_nodes_hl3]))}
-output_layer = {'weights':tf.Variable(tf.random_normal([n_nodes_hl3, n_classes])),
+output_layer = {'weights':tf.Variable(tf.random_normal([n_nodes_hl2, n_classes])),
                 'biases':tf.Variable(tf.random_normal([n_classes])),}
 l1 = tf.add(tf.matmul(x,hidden_1_layer['weights']), hidden_1_layer['biases'])
 l1 = tf.nn.relu(l1)
@@ -61,19 +68,25 @@ l2 = tf.nn.relu(l2)
 # l3 = tf.nn.relu(l3)
 output = tf.matmul(l2,output_layer['weights']) + output_layer['biases']
 
-cost = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits(logits=ouput, labels=y))
+cost = tf.reduce_mean( tf.nn.softmax_cross_entropy_with_logits(logits=output, labels=y))
 optimizer = tf.train.AdamOptimizer().minimize(cost)
 
-hm_epochs = 10
+
+correct_prediction = tf.equal(tf.argmax(output,1), tf.argmax(y,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+#hm_epochs = 10
 print "give no of epochs"
-hm_epoch= raw_input()
+hm_epochs= raw_input()
 with tf.Session() as sess:
 	sess.run(tf.initialize_all_variables())
-	for epoch in range(hm_epochs):
+	for epoch in range(int(hm_epochs)):
 		epoch_loss = 0
 		for i in range(int(2000/batch_size)):
 			epoch_x = features_train[i*100:(i+1)*100,:]
-			epoch_y = labels_train[i*100:(i+1)*100]
+			epoch_y = labels_train_hot[i*100:(i+1)*100]
 			_, c = sess.run([optimizer, cost], feed_dict={x: epoch_x, y:epoch_y})
 		epoch_loss += c
 		print('Epoch', epoch+1, 'completed out of',hm_epochs,'loss:',epoch_loss)
+	
+	print(accuracy.eval(feed_dict={x: features_test, y: labels_test_hot}))
